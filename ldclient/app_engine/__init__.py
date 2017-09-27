@@ -121,8 +121,9 @@ class LDAppEngineClient(object):
 
         # TODO: offline, validate user
 
-        if datetime.datetime.utcnow() > self._flag_expiry:
-            log.debug('Expiry reached, re-fetching features')
+        current_ts = datetime.datetime.utcnow()
+        if current_ts > self._flag_expiry:
+            log.debug('expiry reached, re-fetching features (%s vs %s)' % (current_ts, self._flag_expiry))
             # TODO: failure timeout here should not block returning
             self._init_store()
 
