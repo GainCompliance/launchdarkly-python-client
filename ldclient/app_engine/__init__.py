@@ -105,16 +105,17 @@ class LDAppEngineClient(object):
 
         self._init_store()
 
-        self._flag_expiry = datetime.datetime.utcnow() + datetime.timedelta(seconds=self._config.poll_interval)
-        """ :type: datetime.datetime """
-
         self._events = []
 
+    def _compute_new_expiry(self):
+        return datetime.datetime.utcnow() + datetime.timedelta(seconds=self._config.poll_interval)
 
     def _init_store(self):
         log.debug('Initializing Features')
         self._store.init(self._feature_requester.get_all())
         """ :type: FeatureStore """
+        self._flag_expiry = self._compute_new_expiry()
+        """ :type: datetime.datetime """
 
     def variation(self, key, user, default):
         default = self._config.get_default(key, default)
