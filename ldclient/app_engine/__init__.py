@@ -128,8 +128,8 @@ class LDAppEngineClient(object):
                 # TODO: failure timeout here should not block returning
                 self._init_store()
         except Exception as e:
-            log.error(
-                "Exception caught in initing store: " + e.message + " for flag key: " + key + " and user: " + str(user))
+            log.exception(
+                "Exception caught in initing store: for flag key: " + key + " and user: " + str(user))
             return default
 
         def store_event(value, version=None):
