@@ -121,12 +121,16 @@ class LDAppEngineClient(object):
         default = self._config.get_default(key, default)
 
         # TODO: offline, validate user
-
-        current_ts = datetime.datetime.utcnow()
-        if current_ts > self._flag_expiry:
-            log.debug('expiry reached, re-fetching features (%s vs %s)' % (current_ts, self._flag_expiry))
-            # TODO: failure timeout here should not block returning
-            self._init_store()
+        try:
+            current_ts = datetime.datetime.utcnow()
+            if current_ts > self._flag_expiry:
+                log.debug('expiry reached, re-fetching features (%s vs %s)' % (current_ts, self._flag_expiry))
+                # TODO: failure timeout here should not block returning
+                self._init_store()
+        except Exception as e:
+            log.error(
+                "Exception caught in initing store: " + e.message + " for flag key: " + key + " and user: " + str(user))
+            return default
 
         def store_event(value, version=None):
             self._store_event({'kind': 'feature', 'key': key,
