@@ -1,6 +1,7 @@
 import datetime
 import jsonpickle
 import time
+import threading
 
 import google.appengine.api.taskqueue as taskqueue
 from ldclient.config import Config as Config
@@ -21,14 +22,16 @@ except:
     import Queue as queue
 
 
-_client = None
+_client = threading.local()
+
 
 def get_client():
-    return _client
+    return _client.value
 
 
 def variation(key, user, default):
     return get_client().variation(key, user, default)
+
 
 class LDAppEngine(object):
 
@@ -54,15 +57,15 @@ class LDAppEngine(object):
     def __call__(self, environ, start_response):
         if get_path_info(environ) == EVENTS_TASK_URL:
             return self._handle_events(environ, start_response)
-        
+
         global _client
         try:
-            _client = self.client
+            _client.value = self.client
             r = self.app(environ, start_response)
         finally:
             start = time.time()
-            _client.enqueue_events()
-            _client = None
+            _client.value.enqueue_events()
+            _client.value = None
             log.debug('flushed events to task queue in %s ms' % str((time.time()-start)*1000))
         return r
 
@@ -80,7 +83,7 @@ class LDAppEngine(object):
         r.raise_for_status()
         start_response('200 OK', [])
         return []
-        
+
 
 class LDAppEngineClient(object):
     def __init__(self, sdk_key=None, config=None, **kwargs):
