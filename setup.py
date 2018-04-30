@@ -45,10 +45,10 @@ class PyTest(Command):
 
 setup(
     name='ldclient-py',
-    version='4.0.5',
+    version='4.0.5.dev',
     author='LaunchDarkly',
     author_email='team@launchdarkly.com',
-    packages=['ldclient'],
+    packages=['ldclient', 'ldclient.app_engine'],
     url='https://github.com/launchdarkly/python-client',
     description='LaunchDarkly SDK for Python',
     long_description='LaunchDarkly SDK for Python',
