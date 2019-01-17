@@ -182,6 +182,11 @@ class LDAppEngineClient(object):
         log.debug('sending %s events to task queue' % len(self._events))
         payload = jsonpickle.encode(self._events)
         self._events = []
-        t = taskqueue.Task(url=EVENTS_TASK_URL, payload=payload, method='POST',
-                           retry_options=taskqueue.TaskRetryOptions(task_retry_limit=3))
+        t = taskqueue.Task(
+            url=EVENTS_TASK_URL,
+            payload=payload,
+            method='POST',
+            retry_options=taskqueue.TaskRetryOptions(task_retry_limit=3),
+            namespace=''
+        )
         t.add()
