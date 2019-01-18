@@ -69,7 +69,7 @@ class LDAppEngine(object):
                 _client.value = None
                 log.debug('flushed events to task queue in %s ms' % str((time.time()-start)*1000))
             except:
-                log.exception('failure occurred while trying to send events to launchdarkly')
+                log.info('failure occurred while trying to send events to launchdarkly')
         return r
 
     def _handle_events(self, environ, start_response):
