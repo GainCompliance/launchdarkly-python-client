@@ -65,7 +65,8 @@ class LDAppEngine(object):
         finally:
             try:
                 start = time.time()
-                _client.value.enqueue_events()
+                with self.app.app_context():
+                    _client.value.enqueue_events()
                 _client.value = None
                 log.debug('flushed events to task queue in %s ms' % str((time.time()-start)*1000))
             except:
