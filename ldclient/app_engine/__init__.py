@@ -47,6 +47,7 @@ class LDAppEngine(object):
     """
 
     def __init__(self, app, **kwargs):
+        self.flask_app = app
         self.app = app.wsgi_app
         app.wsgi_app = self
         start = time.time()
@@ -65,7 +66,7 @@ class LDAppEngine(object):
         finally:
             try:
                 start = time.time()
-                with self.app.app_context():
+                with self.flask_app.app_context():
                     _client.value.enqueue_events()
                 _client.value = None
                 log.debug('flushed events to task queue in %s ms' % str((time.time()-start)*1000))
