@@ -11,6 +11,14 @@ try:  # for pip >= 10
 except ImportError:  # for pip <= 9.0.3
     from pip.req import parse_requirements
 
+
+def safe_get_reqs(reqs):
+    try:
+        return [str(ir.req) for ir in install_reqs]
+    except:
+        return [str(ir.requirement) for ir in install_reqs]
+
+
 # parse_requirements() returns generator of pip.req.InstallRequirement objects
 install_reqs = parse_requirements('requirements.txt', session=uuid.uuid1())
 python26_reqs = parse_requirements('python2.6-requirements.txt', session=uuid.uuid1())
@@ -21,11 +29,11 @@ redis_reqs = parse_requirements('redis-requirements.txt', session=uuid.uuid1())
 
 # reqs is a list of requirement
 # e.g. ['django==1.5.1', 'mezzanine==1.4.6']
-reqs = [str(ir.req) for ir in install_reqs]
-python26reqs = [str(ir.req) for ir in python26_reqs]
-testreqs = [str(ir.req) for ir in test_reqs]
-txreqs = [str(ir.req) for ir in twisted_reqs]
-redisreqs = [str(ir.req) for ir in redis_reqs]
+reqs = safe_get_reqs(install_reqs)
+python26reqs = safe_get_reqs(python26_reqs)
+testreqs = safe_get_reqs(test_reqs)
+txreqs = safe_get_reqs(twisted_reqs)
+redisreqs = safe_get_reqs(redis_reqs)
 
 
 class PyTest(Command):
