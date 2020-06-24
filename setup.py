@@ -52,7 +52,7 @@ class PyTest(Command):
         raise SystemExit(errno)
 
 setup(
-    name='ldclient-py',
+    name='pygain-ldclient',
     version='4.0.5.dev',
     author='LaunchDarkly',
     author_email='team@launchdarkly.com',
