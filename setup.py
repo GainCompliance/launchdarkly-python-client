@@ -13,10 +13,13 @@ except ImportError:  # for pip <= 9.0.3
 
 
 def safe_get_reqs(reqs):
+    reqs_as_list = [x for x in reqs]
     try:
-        return [str(ir.req) for ir in install_reqs]
+        result = [str(ir.req) for ir in reqs_as_list]
     except:
-        return [str(ir.requirement) for ir in install_reqs]
+        result = [str(ir.requirement) for ir in reqs_as_list]
+
+    return result
 
 
 # parse_requirements() returns generator of pip.req.InstallRequirement objects
